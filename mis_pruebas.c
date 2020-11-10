@@ -278,6 +278,27 @@ void probar_iterador_externo(){
 }
 
 
+bool mostrar_elemento(void* elemento, void* contador){
+    if(elemento && contador)
+        printf("Elemento %i: %c \n", (*(int*)contador)++, *(char*)elemento);
+    return true;
+}
+
+bool mostrar_elemento_hasta_4(void* elemento, void* contador){
+    if(elemento && contador && *(int*)elemento != 4)
+        printf("Elemento %i: %i \n", (*(int*)contador)++, *(int*)elemento);
+    return *(int*)elemento != 4;
+}
+
+
+
+void probar_iterador_interno(){
+    pa2m_nuevo_grupo("Pruebas iterador interno");
+    lista_t* lista = lista_crear();
+
+}
+
+
 
 int main(){
     probar_lista_crear_y_destruir();
