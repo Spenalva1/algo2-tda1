@@ -90,21 +90,6 @@ int lista_borrar(lista_t* lista){
     return SIN_ERROR;
 }
 
-
-/*
-*
-*/
-
-void destruir_nodos(nodo_t* nodo){
-    if(!nodo)
-        return;
-
-    if(nodo->siguiente)
-        destruir_nodos(nodo->siguiente);
-        
-    free(nodo);
-}
-
 int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
     if(!lista)
         return ERROR;
@@ -190,6 +175,19 @@ void* lista_primero(lista_t* lista){
     return lista_elemento_en_posicion(lista, 0);
 }
 
+/*
+*   Recibe el primer nodo de una lista y Libera todos los nodos pertenecientes a ella
+*/
+void destruir_nodos(nodo_t* nodo){
+    if(!nodo)
+        return;
+
+    if(nodo->siguiente)
+        destruir_nodos(nodo->siguiente);
+        
+    free(nodo);
+}
+
 void lista_destruir(lista_t* lista){
     destruir_nodos(lista->nodo_inicio);
     free(lista);
@@ -240,8 +238,12 @@ size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), vo
         return 0;
     size_t iteraciones = 0;
     nodo_t* nodo_actual = lista->nodo_inicio;
-    while(nodo_actual && (*funcion)(nodo_actual->elemento, contexto)){
-        nodo_actual = nodo_actual->siguiente;
+    bool iterar = true;
+    while(nodo_actual && iterar){
+        if((*funcion)(nodo_actual->elemento, contexto))
+            nodo_actual = nodo_actual->siguiente;
+        else 
+            iterar = false;
         iteraciones++;
     }
     return iteraciones;

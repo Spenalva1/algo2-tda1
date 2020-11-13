@@ -278,24 +278,28 @@ void probar_iterador_externo(){
 }
 
 
-bool mostrar_elemento(void* elemento, void* contador){
-    if(elemento && contador)
-        printf("Elemento %i: %c \n", (*(int*)contador)++, *(char*)elemento);
-    return true;
+bool mostrar_hasta_un_3(void* elemento, void* contador){
+    if(elemento)
+        printf("Posicion %i: %i\n", (*(int*)contador), *(int*)elemento);
+    (*(int*)contador)++;
+    return *(int*)elemento != 3;
 }
-
-bool mostrar_elemento_hasta_4(void* elemento, void* contador){
-    if(elemento && contador && *(int*)elemento != 4)
-        printf("Elemento %i: %i \n", (*(int*)contador)++, *(int*)elemento);
-    return *(int*)elemento != 4;
-}
-
-
 
 void probar_iterador_interno(){
     pa2m_nuevo_grupo("Pruebas iterador interno");
     lista_t* lista = lista_crear();
-
+    int primer_valor = 1, segundo_valor = 2, tercer_valor = 3, cuarto_valor = 4, quinto_valor = 5, sexto_valor = 6;
+    printf("Imprimo del 1 al 3 inclusive\n");
+    lista_insertar(lista, &primer_valor);
+    lista_insertar(lista, &segundo_valor);
+    lista_insertar(lista, &tercer_valor);
+    lista_insertar(lista, &cuarto_valor);
+    lista_insertar(lista, &quinto_valor);
+    lista_insertar(lista, &sexto_valor);
+    int i = 0;
+    size_t iteraciones = lista_con_cada_elemento(lista, mostrar_hasta_un_3, &i);
+    pa2m_afirmar(i==3 && iteraciones == 3, "Se mostraron 3 elementos en 3 iteraciones");
+    lista_destruir(lista);
 }
 
 
@@ -317,7 +321,7 @@ int main(){
     probar_lista_desencolar();
     probar_lista_primero();
     probar_iterador_externo();
+    probar_iterador_interno();
     pa2m_mostrar_reporte();
-    //TESTEAR ITERADOR INTERNO
     return 0;
 }
