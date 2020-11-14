@@ -175,21 +175,16 @@ void* lista_primero(lista_t* lista){
     return lista_elemento_en_posicion(lista, 0);
 }
 
-/*
-*   Recibe el primer nodo de una lista y Libera todos los nodos pertenecientes a ella
-*/
-void destruir_nodos(nodo_t* nodo){
-    if(!nodo)
-        return;
-
-    if(nodo->siguiente)
-        destruir_nodos(nodo->siguiente);
-        
-    free(nodo);
-}
-
 void lista_destruir(lista_t* lista){
-    destruir_nodos(lista->nodo_inicio);
+    if(!lista)
+        return;
+    nodo_t* nodo_a_borrar = lista->nodo_inicio;
+    nodo_t* nodo_aux;
+    while(nodo_a_borrar){
+        nodo_aux = nodo_a_borrar->siguiente;
+        free(nodo_a_borrar);
+        nodo_a_borrar = nodo_aux;
+    }
     free(lista);
 }
 
@@ -234,7 +229,7 @@ void lista_iterador_destruir(lista_iterador_t* iterador){
 }
 
 size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void *contexto){
-    if(!lista)
+    if(!lista || !funcion)
         return 0;
     size_t iteraciones = 0;
     nodo_t* nodo_actual = lista->nodo_inicio;
